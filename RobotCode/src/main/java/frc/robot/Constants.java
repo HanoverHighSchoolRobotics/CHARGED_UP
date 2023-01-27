@@ -22,8 +22,10 @@ import edu.wpi.first.wpilibj.I2C;
 public final class Constants {
 
     //Declare coordinates in the form {u, x, y, angle}
-    public static final double[][] autoCoordinates = {{0, 0,0 ,0}, {1, 0,0.5 ,0}, {2, 0,1 ,0}, {3, 1.5,1.5 ,0}};
+    public static final double[][] autoCoordinates = {{0, 0,0 ,0}, {1, 0,0.5 ,20}, {2, 0,1 ,40}, {3, 0,1.5 ,60}};
 
+
+    //Ports
     public static final int frontLeftDrvMotorPort = 4;
     public static final int frontRightDrvMotorPort = 2;
     public static final int rearLeftDrvMotorPort = 6;
@@ -38,18 +40,30 @@ public final class Constants {
     public static final int frontRightRotEncoderPort = 9;
     public static final int rearLeftRotEncoderPort = 12;
     public static final int rearRightRotEncoderPort = 10;
-    
 
-    //public static final double frontLeftEncoderOffset = 285.380859375;
-    //public static final double frontRightEncoderOffset = 252.685546875;
-    //public static final double rearLeftEncoderOffset = 130.25390625;
-    //public static final double rearRightEncoderOffset = 69.345703125;
+    public static final int leftAngMotorPort = 0;
+    public static final int rightAngMotorPort = 0;
+    public static final int leftExtMotorPort = 0;
+    public static final int rightExtMotorPort = 0;
+    public static final int angleEncoderChannel = 0;
+
+    public static final int clawMotorPort = 0;
+    public static final int rotateClawMotorPort = 1;
+    public static final int rotationEncoderChannel = 0;
+
+    
+    //Encoder Values
     public static final double frontLeftEncoderOffset = 286.259765625;
     public static final double frontRightEncoderOffset = 250.224609375;
     public static final double rearLeftEncoderOffset = 128.759765625;
     public static final double rearRightEncoderOffset = 76.201171875;
-
  
+    public static final double maxAngleEncoderValue = 999999999;
+    public static final double minAngleEncoderValue = -999999999;
+
+    public static final double maxRotationEncoderValue = 999999999;
+    public static final double minRotationEncoderValue = -999999999;
+
     public static final double trackwidth = 22.5;
     public static final double wheelbase = 22.5;
 
@@ -57,6 +71,7 @@ public final class Constants {
     public static final double drivetrainRadius = Math.sqrt(Math.pow(trackwidth, 2) + Math.pow(wheelbase, 2)); 
 
     public static final int xboxControllerPort = 0;
+
 
     //Drive PIDs
     public static final double rotPID_P = 1;
@@ -81,6 +96,8 @@ public final class Constants {
     public static final double zControllerP = 0.5;
     public static final double zControllerI = 0;
     public static final double zControllerD = 0;
+
+    public static final double aBalanceValue = .25;
 
 
     //Instansiated in this order:

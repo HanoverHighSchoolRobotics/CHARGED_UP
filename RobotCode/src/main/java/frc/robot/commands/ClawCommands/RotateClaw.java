@@ -2,45 +2,41 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.ClawCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.Audio;
+import frc.robot.subsystems.Claw;
 
-public class PlayAudio extends CommandBase {
+public class RotateClaw extends CommandBase {
+ 
+  Claw claw;
+  double speed;
 
-  private final Audio audio;
-  private int Selection;
-  private int Loops;
-
-  public PlayAudio(Audio ad, int selection, int loops) {
-
-    audio = ad;
-
-    Selection = selection;
-    Loops = loops;
-
-    addRequirements(audio);
+  public RotateClaw(Claw cw, double Speed) {
+     
+    claw = cw;
+    speed = Speed;
+    addRequirements(claw);
 
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-
-    audio.playAudio(1, 2);
-
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+
+    claw.rotateClaw(speed);
+
+  }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
 
-    audio.stopAudio();
+    claw.rotateClaw(0);
 
   }
 

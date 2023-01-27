@@ -55,8 +55,8 @@ public class Drivetrain extends SubsystemBase {
 
   AHRS navx;
 
-  SwerveDriveOdometry odometry;
-  OldDometry TESTODOMETRY;
+  //SwerveDriveOdometry odometry;
+  OldDometry odometry;
   
   DecimalFormat odometryRounder = new DecimalFormat("##.##");
   
@@ -64,6 +64,7 @@ public class Drivetrain extends SubsystemBase {
   public static String drivetrainDashboard;
 
   public Drivetrain() {
+
     frontLeftDrvMotor = new TalonFX(Constants.frontLeftDrvMotorPort);
     frontRightDrvMotor = new TalonFX(Constants.frontRightDrvMotorPort);
     rearLeftDrvMotor = new TalonFX(Constants.rearLeftDrvMotorPort);
@@ -138,8 +139,7 @@ public class Drivetrain extends SubsystemBase {
     navx = new AHRS(SPI.Port.kMXP);
     navx.reset(); 
     
-    odometry = new SwerveDriveOdometry(Constants.driveKinematics, navx.getRotation2d(), getSwerveModulePositions());
-    TESTODOMETRY = new OldDometry(Constants.driveKinematics, navx.getRotation2d());
+    odometry = new OldDometry(Constants.driveKinematics, navx.getRotation2d());
   }
 
   @Override
@@ -147,9 +147,7 @@ public class Drivetrain extends SubsystemBase {
     // This method will be called once per scheduler run
     
     //Updates odometry
-    odometry.update(navx.getRotation2d(), getSwerveModulePositions());
-
-    TESTODOMETRY.update(navx.getRotation2d(), 
+    odometry.update(navx.getRotation2d(), 
     new SwerveModuleState(positionChangePer100msToMetersPerSecond(frontLeftDrvMotor.getSelectedSensorVelocity()), 
     Rotation2d.fromDegrees(getRotEncoderValue(SwerveModule.FRONT_LEFT))),
     
@@ -161,10 +159,6 @@ public class Drivetrain extends SubsystemBase {
     
     new SwerveModuleState(positionChangePer100msToMetersPerSecond(rearRightDrvMotor.getSelectedSensorVelocity()), 
     Rotation2d.fromDegrees(getRotEncoderValue(SwerveModule.REAR_RIGHT))));
-
-    SmartDashboard.putNumber("TEST odometry X", TESTODOMETRY.getPoseMeters().getX());
-    SmartDashboard.putNumber("TEST odometry Y", TESTODOMETRY.getPoseMeters().getY());
-    SmartDashboard.putNumber("TEST odometry Z", TESTODOMETRY.getPoseMeters().getRotation().getDegrees());
 
   }
 
@@ -498,6 +492,19 @@ public class Drivetrain extends SubsystemBase {
   
   
 
+  public double getNavXRollOutput(){
+    return navx.getRoll();
+  }
+
+  public double getNavXPitchOutput(){
+    return navx.getPitch();
+  }
+  
+  public double getNavXRollOutputRadians(){
+    return Math.toRadians(navx.getRoll());
+  }
+  
+
 
   //------------------------------------------------------------------------------------------------------------------------------------
   //OTHER FUNCTIONS
@@ -558,25 +565,10 @@ public double getOdometryZ(){
   return -Double.valueOf(odometryRounder.format(odometry.getPoseMeters().getRotation().getDegrees()));
 }
 
-public SwerveModulePosition[] getSwerveModulePositions(){
-  SwerveModulePosition[] swerveModulePositions = {
-    new SwerveModulePosition(getDriveEncoderMeters(SwerveModule.FRONT_LEFT), new Rotation2d(Math.toRadians(getRotEncoderValue(SwerveModule.FRONT_LEFT)))),
-    new SwerveModulePosition(getDriveEncoderMeters(SwerveModule.FRONT_RIGHT), new Rotation2d(Math.toRadians(getRotEncoderValue(SwerveModule.FRONT_RIGHT)))),
-    new SwerveModulePosition(getDriveEncoderMeters(SwerveModule.REAR_LEFT), new Rotation2d(Math.toRadians(getRotEncoderValue(SwerveModule.REAR_LEFT)))),
-    new SwerveModulePosition(getDriveEncoderMeters(SwerveModule.REAR_RIGHT), new Rotation2d(Math.toRadians(getRotEncoderValue(SwerveModule.REAR_RIGHT))))
-  };
-
-  return swerveModulePositions;
-}
 
 
 public void resetOdometry(Pose2d pose2d) {
-
-  odometry.resetPosition(navx.getRotation2d(), getSwerveModulePositions(), pose2d);
-}
-
-public void TESTresetOdometry(Pose2d pose2d) {
-  TESTODOMETRY.resetPosition(pose2d, navx.getRotation2d());
+  odometry.resetPosition(pose2d, navx.getRotation2d());
 }
 
 
