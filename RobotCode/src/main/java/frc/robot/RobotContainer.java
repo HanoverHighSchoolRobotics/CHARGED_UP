@@ -83,7 +83,7 @@ public class RobotContainer {
     driveWithXbox.addRequirements(drivetrain);
     slideWithXbox.addRequirements(slide);
     autoBalance.addRequirements(drivetrain);
-    drivetrain.setDefaultCommand(driveWithXbox);
+    drivetrain.setDefaultCommand(autoBalance);
     slide.setDefaultCommand(slideWithXbox);
 
     recalibrateModules = new RecalibrateModules(drivetrain, xbox1);

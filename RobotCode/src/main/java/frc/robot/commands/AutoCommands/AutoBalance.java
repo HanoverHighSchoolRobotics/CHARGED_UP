@@ -25,6 +25,7 @@ public class AutoBalance extends CommandBase {
   
   private double speedForward = .25;
   private double speedBack = -.25;
+  private double speedNone = 0;
 
   private String movementDirection = "Level";
 
@@ -47,44 +48,54 @@ public class AutoBalance extends CommandBase {
   @Override
   public void execute() {
 
-  SmartDashboard.putNumber("Robot Angle", drivetrain.getNavXPitchOutput());
-  SmartDashboard.putString("Is robot level", movementDirection);
+    SmartDashboard.putNumber("Robot Speed Forwards", speedForward);
+    SmartDashboard.putNumber("Robot Speed Backwards", speedBack);
+    SmartDashboard.putNumber("Robot Angle", drivetrain.getNavXPitchOutput());
+    SmartDashboard.putString("Is robot level", movementDirection);
 
-    //When button is held lock all wheels forward
+    speedBack = drivetrain.getNavXPitchOutput() * Constants.aBalanceValue;
+    speedForward = drivetrain.getNavXPitchOutput() * Constants.aBalanceValue;
+
+    if (speedBack < -1){
+      speedBack = -1;
+    } else if (speedBack > 0){
+      speedBack = 0;
+    }
+    
+    if (speedForward > 1){
+      speedForward = 1;
+    } else if (speedForward < 0){
+      speedForward = 0;
+    }
+
+    //When button is held locks all wheels forward
+    //Move forward or backwards according to angle
+    //Repeats until you let go of the button       
+
+    //This needs rework as when you let go of the button and make the robot leveled, the motors still move.
+    //But this code actually works as intended when holding the button.
     if (xbox.getXButton()){
+
       drivetrain.rotateModule(SwerveModule.FRONT_LEFT, 0, 1);
       drivetrain.rotateModule(SwerveModule.FRONT_RIGHT, 0, 1);
       drivetrain.rotateModule(SwerveModule.REAR_LEFT, 0, 1);
       drivetrain.rotateModule(SwerveModule.REAR_RIGHT, 0, 1);
-      
-      //repeat until let go of button
-      while (xbox.getXButtonPressed() == true){
-        
-        speedBack = drivetrain.getNavXPitchOutput() * Constants.aBalanceValue;
-        speedForward = drivetrain.getNavXPitchOutput() * Constants.aBalanceValue;
 
-        if (speedBack < -1)
-          speedBack = -1;
-
-        if (speedForward > 1)
-        speedForward = 1;
-        
-        //When navx thinks unbalanced forward, drive motors back
+        //When navx thinks tilted back, drive motors forward
         if (drivetrain.getNavXPitchOutput() > unbalancedAngleForward){
-          //drivetrain.driveAllModules(speedBack);
-          movementDirection = "Tilted Forward";
-
-        } else  if (drivetrain.getNavXPitchOutput() < unbalancedAngleBack){
-        //When navx thinks unbalanced backwards, drive motors forward
-          //drivetrain.driveAllModules(speedForward);
+          drivetrain.driveAllModules(speedForward);
           movementDirection = "Tilted Backwards";
+        
+        //When navx thinks tilted forward, drive motors backwards
+        } else if (drivetrain.getNavXPitchOutput() < unbalancedAngleBack){
+          drivetrain.driveAllModules(speedBack);
+          movementDirection = "Tilted Forwards";
    
         } else {
 
-          movementDirection = "Level";
+          movementDirection = "Level";       
+          drivetrain.driveAllModules(speedNone);
 
-        }
-  
         }
       }
     }

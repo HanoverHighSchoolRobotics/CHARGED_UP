@@ -79,11 +79,6 @@ public final class Constants {
     public static final double rotPID_D = 0.00;
     public static final double rotPIDMinValue = 0.07;
 
-    //AutoBalance PIDs
-    public static final double autoBalanceP = 0;
-    public static final double autoBalanceI = 0;
-    public static final double autoBalanceD = 0;
-
     //Auto PIDs
     public static final double xControllerP = 7;
     public static final double xControllerI = 2;
@@ -97,7 +92,7 @@ public final class Constants {
     public static final double zControllerI = 0;
     public static final double zControllerD = 0;
 
-    public static final double aBalanceValue = .25;
+    public static final double aBalanceValue = .01;
 
 
     //Instansiated in this order:
