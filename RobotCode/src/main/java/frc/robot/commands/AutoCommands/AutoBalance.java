@@ -20,8 +20,8 @@ public class AutoBalance extends CommandBase {
 
   private Drivetrain drivetrain = new Drivetrain();
   private XboxController xbox;
-  private double unbalancedAngleForward = 10;
-  private double unbalancedAngleBack = -10;
+  private double unbalancedAngleForward = 5;
+  private double unbalancedAngleBack = -5;
   
   private double speedForward = .25;
   private double speedBack = -.25;
@@ -50,7 +50,7 @@ public class AutoBalance extends CommandBase {
 
     SmartDashboard.putNumber("Robot Speed Forwards", speedForward);
     SmartDashboard.putNumber("Robot Speed Backwards", speedBack);
-    SmartDashboard.putNumber("Robot Angle", drivetrain.getNavXPitchOutput());
+    //SmartDashboard.putNumber("Robot Angle", drivetrain.getNavXPitchOutput()); moved to DriveWithXbox
     SmartDashboard.putString("Is robot level", movementDirection);
 
     speedBack = drivetrain.getNavXPitchOutput() * Constants.aBalanceValue;
@@ -72,8 +72,9 @@ public class AutoBalance extends CommandBase {
     //Move forward or backwards according to angle
     //Repeats until you let go of the button       
 
-    //This needs rework as when you let go of the button and make the robot leveled, the motors still move.
-    //But this code actually works as intended when holding the button.
+    //IMPORTANT
+    //Make a function for the robot to use the NaxV yaw to make its heading perpendicular to the ramp.
+    //NavX Yaw makes robot rotate until its perpendiculor to ramp.
     if (xbox.getXButton()){
 
       drivetrain.rotateModule(SwerveModule.FRONT_LEFT, 0, 1);
@@ -93,8 +94,8 @@ public class AutoBalance extends CommandBase {
    
         } else {
 
-          movementDirection = "Level";       
           drivetrain.driveAllModules(speedNone);
+          movementDirection = "Level";       
 
         }
       }
@@ -109,6 +110,10 @@ public class AutoBalance extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    if (xbox.getXButton() == false) {
+        return true;
+    } else {
+      return false;
+    }
   }
 }

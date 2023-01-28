@@ -179,7 +179,8 @@ public class DriveWithXbox extends CommandBase {
     SmartDashboard.putNumber("FR Wheel Encoder", drivetrain.getDriveEncoder(SwerveModule.FRONT_RIGHT));
     SmartDashboard.putNumber("FR Wheel Encoder Meters", drivetrain.getDriveEncoderMeters(SwerveModule.FRONT_RIGHT));
 
-    
+    SmartDashboard.putNumber("Robot Angle", drivetrain.getNavXPitchOutput());
+
 
 
     //Reset gyro button

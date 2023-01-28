@@ -72,18 +72,17 @@ public class RobotContainer {
 
     playAudio = new PlayAudio(audio, 2, 2);
 
-    autoBalance = new AutoBalance(drivetrain, xbox1);
-
     pathEQ = new PathEQ(Constants.autoCoordinates, true);
 
     //Teleop commands
     driveWithXbox = new DriveWithXbox(drivetrain, xbox1, false);
     slideWithXbox = new SlideWithXbox(xbox2, slide);
+    autoBalance = new AutoBalance(drivetrain, xbox1);
  
     driveWithXbox.addRequirements(drivetrain);
     slideWithXbox.addRequirements(slide);
     autoBalance.addRequirements(drivetrain);
-    drivetrain.setDefaultCommand(autoBalance);
+    drivetrain.setDefaultCommand(driveWithXbox);
     slide.setDefaultCommand(slideWithXbox);
 
     recalibrateModules = new RecalibrateModules(drivetrain, xbox1);
@@ -122,6 +121,9 @@ public class RobotContainer {
     JoystickButton driver2RB = new JoystickButton(xbox2, XboxController.Button.kRightBumper.value);
 
     driver1A.onTrue(playAudio);
+
+    driver1X.onTrue(autoBalance);
+    //driver1X.onFalse(autoBalance.end(false));
 
     driver2LB.onTrue(GenerateClawCommand(-.3)).debounce(.3);
     driver2RB.onTrue(GenerateClawCommand(.3)).debounce(.3);
