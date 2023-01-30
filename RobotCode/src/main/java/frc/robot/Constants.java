@@ -92,7 +92,8 @@ public final class Constants {
     public static final double zControllerI = 0;
     public static final double zControllerD = 0;
 
-    public static final double aBalanceValue = .01;
+    public static final double aBalanceXConstant = .01;
+    public static final double aBalanceTurnConstant = .01;
 
 
     //Instansiated in this order:
