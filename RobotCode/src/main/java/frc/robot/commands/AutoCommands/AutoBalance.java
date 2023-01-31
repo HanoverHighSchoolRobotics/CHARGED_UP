@@ -77,20 +77,26 @@ public class AutoBalance extends CommandBase {
 
       //Rotates robot until heading is perpendicular with ramp
       if (state == 0) {
+       
+        //When NavX thinks yaw is less than 2, turns right.
+        if (drivetrain.getNavXYawOutput() < yawTarget - 2) {
         //Sets wheel angle to turn position
         drivetrain.rotateModule(SwerveModule.FRONT_LEFT, 45, 1);
         drivetrain.rotateModule(SwerveModule.FRONT_RIGHT, 135, 1);
         drivetrain.rotateModule(SwerveModule.REAR_LEFT, 315, 1);
         drivetrain.rotateModule(SwerveModule.REAR_RIGHT, 225, 1);
-       
-        //When NavX thinks yaw is less than 2, turns right.
-        if (drivetrain.getNavXYawOutput() < yawTarget - 2) {
         
         drivetrain.driveAllModules(speedTurn);
         movementDirection = "Turning Right";
 
        //When NavX thinks yaw is greater than 2, turns left.
        } else if (drivetrain.getNavXYawOutput() > yawTarget + 2) {
+
+        //Sets wheel angle to turn position
+        drivetrain.rotateModule(SwerveModule.FRONT_LEFT, 45, 1);
+        drivetrain.rotateModule(SwerveModule.FRONT_RIGHT, 135, 1);
+        drivetrain.rotateModule(SwerveModule.REAR_LEFT, 315, 1);
+        drivetrain.rotateModule(SwerveModule.REAR_RIGHT, 225, 1);
         
         drivetrain.driveAllModules(-speedTurn);
         movementDirection = "Turning Left";
