@@ -4,77 +4,121 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.TalonSRXControlMode;
+import com.ctre.phoenix.motorcontrol.RemoteFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Preferences;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class Slide extends SubsystemBase {
 
-  TalonFX leftAngMotor;
-  TalonFX rightAngMotor;
   TalonFX leftExtMotor;
   TalonFX rightExtMotor;
+  TalonFX angMotor;
 
-  //DutyCycleEncoder angleBore;
+  PIDController anglePID;
+  PIDController extensionPID;
+
+  DutyCycleEncoder angleEncoder;
+  DutyCycleEncoder extEncoder;
+
+  SimpleMotorFeedforward angleFeed;
+ 
+  double angleBore;
+  double angle;
+  double tolerance = 100;
+  double CurrentStage = 1;
  
   public Slide() {
 
-    leftAngMotor = new TalonFX(Constants.leftAngMotorPort);
-    rightAngMotor = new TalonFX(Constants.rightAngMotorPort);
     leftExtMotor = new TalonFX(Constants.leftExtMotorPort);
     rightExtMotor = new TalonFX(Constants.rightExtMotorPort);
+    angMotor = new TalonFX(Constants.angMotorPort);
 
-    //angleBore = new DutyCycleEncoder(Constants.angleEncoderChannel);
+    rightExtMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+    rightExtMotor.configIntegratedSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+
+    angleEncoder = new DutyCycleEncoder(0);
+    extEncoder = new DutyCycleEncoder(9);
+
+    anglePID = new PIDController(.01, 0, .01);
+    extensionPID = new PIDController(.01, 0, .01);
+    angleFeed = new SimpleMotorFeedforward(.01, .01);
  
-    leftAngMotor.setInverted(true);
-    rightAngMotor.setInverted(false);
     leftExtMotor.setInverted(true);
     rightExtMotor.setInverted(false);
 
-    leftAngMotor.setNeutralMode(NeutralMode.Brake);
-    rightAngMotor.setNeutralMode(NeutralMode.Brake);
     leftExtMotor.setNeutralMode(NeutralMode.Brake);
     rightExtMotor.setNeutralMode(NeutralMode.Brake);
-
+    angMotor.setNeutralMode(NeutralMode.Brake);
+ 
   }
 
   @Override
   public void periodic() {
- 
-    //SmartDashboard.putNumber("Angle Encoder Position", angleBore.get());
-    SmartDashboard.putNumber("Angle Encoder Maximum", Constants.maxAngleEncoderValue);
-    SmartDashboard.putNumber("Angle Encoder Minimum", Constants.minAngleEncoderValue);
 
+    angle = (angleEncoder.getAbsolutePosition() - .3903) * 384.6153;
+  
+    SmartDashboard.putNumber("Angle", angle);
+    SmartDashboard.putNumber("Extension", extEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Custom Angle", 0);
+ 
   }
 
   public void changeAngleUsingPower(double speed) {
+ 
+    if (speed > 0 && angle > Constants.maxAngleEncoderValue) {
 
-    /*
-    if (angleBore.get() < Constants.maxAngleEncoderValue && angleBore.get() > Constants.minAngleEncoderValue) {
-      
-    leftAngMotor.set(TalonFXControlMode.PercentOutput, speed);
-    rightAngMotor.set(TalonFXControlMode.PercentOutput, speed);
+      angMotor.set(ControlMode.PercentOutput, 0);
 
+    } else if (speed < 0 && angle < Constants.minAngleEncoderValue) {
+
+      angMotor.set(ControlMode.PercentOutput, 0);
+  
     } else {
 
-    leftAngMotor.set(TalonFXControlMode.PercentOutput, 0);
-    rightAngMotor.set(TalonFXControlMode.PercentOutput, 0);
+      angMotor.set(ControlMode.PercentOutput, speed);
 
     }
-    */
+ 
+  }
 
+  public double getAngle() {
+
+    return angle;
+
+  }
+
+  public void setZeroAngle() {
+
+    Preferences.initDouble(Constants.angleZeroKey, angleEncoder.getAbsolutePosition());
+
+  }
+
+  public void changeAngleUsingVoltage(double speed) {
+ 
+    angMotor.set(ControlMode.Current, angleFeed.calculate(speed));
+ 
   }
 
   public void extendArmUsingPower(double speed) {
 
-    leftExtMotor.set(TalonFXControlMode.PercentOutput, speed);
-    rightExtMotor.set(TalonFXControlMode.PercentOutput, speed);
+    leftExtMotor.set(ControlMode.PercentOutput, speed);
+    rightExtMotor.set(ControlMode.PercentOutput, speed);
+
+  }
+
+  public void extendToStage(int Stage) {
+    
 
   }
 

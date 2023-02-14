@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -24,10 +25,16 @@ public final class Constants {
     //Declare coordinates in the form {u, x, y, angle}
     public static final double[][] autoCoordinates = {{0, 0,0 ,0}, {1, 0,0.5 ,20}, {2, 0,1 ,40}, {3, 0,1.5 ,60}};
 
+    //Create Mode Select
+    public static SendableChooser<String> modeSelect;
+
+    //Offsets and Zeroing
+    public static String angleZeroKey = "AngleZero";
+    public static double angleZeroValue = 0;
 
     //Ports
     public static final int frontLeftDrvMotorPort = 4;
-    public static final int frontRightDrvMotorPort = 2;
+    public static final int frontRightDrvMotorPort = 0;
     public static final int rearLeftDrvMotorPort = 6;
     public static final int rearRightDrvMotorPort = 8;
 
@@ -41,15 +48,14 @@ public final class Constants {
     public static final int rearLeftRotEncoderPort = 12;
     public static final int rearRightRotEncoderPort = 10;
 
-    public static final int leftAngMotorPort = 0;
-    public static final int rightAngMotorPort = 0;
-    public static final int leftExtMotorPort = 0;
-    public static final int rightExtMotorPort = 0;
-    public static final int angleEncoderChannel = 0;
+    public static final int leftExtMotorPort = 2;
+    public static final int rightExtMotorPort = 13;
+    public static final int angMotorPort = 15;
+    public static final int angleEncoderChannel = 15;
 
-    public static final int clawMotorPort = 0;
-    public static final int rotateClawMotorPort = 1;
-    public static final int rotationEncoderChannel = 0;
+    public static final int clawMotorPort = 6;
+    public static final int rotateClawMotorPort = 5;
+    public static final int rotationEncoderChannel = 5;
 
     
     //Encoder Values
@@ -58,11 +64,20 @@ public final class Constants {
     public static final double rearLeftEncoderOffset = 128.759765625;
     public static final double rearRightEncoderOffset = 76.201171875;
  
-    public static final double maxAngleEncoderValue = 999999999;
-    public static final double minAngleEncoderValue = -999999999;
+    public static final int angleEncoderDIO = 0;
+    public static final double maxAngleEncoderValue = 20;
+    public static final double minAngleEncoderValue = -15;
 
+    public static final int clawRotationEncoderDIO = 1;
     public static final double maxRotationEncoderValue = 999999999;
     public static final double minRotationEncoderValue = -999999999;
+
+    public static final int clawGrabEncoderDIO = 2;
+
+    public static final int extensionEncoderDIO = 9;
+    public static final double extensionStage1EncoderValue = 0;
+    public static final double extensionStage2EncoderValue = 1000;
+    public static final double extensionStage3EncoderValue = 2000;
 
     public static final double trackwidth = 22.5;
     public static final double wheelbase = 22.5;
@@ -117,6 +132,5 @@ public final class Constants {
     // Constraint for the motion profilied robot angle controller
     public static final TrapezoidProfile.Constraints thetaControllerConstraints =
         new TrapezoidProfile.Constraints(Math.PI, Math.PI);
-    
-
+ 
 }

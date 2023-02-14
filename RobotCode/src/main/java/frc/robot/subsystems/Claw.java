@@ -5,8 +5,12 @@
 package frc.robot.subsystems;
  
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAlternateEncoder.Type;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,49 +19,41 @@ import frc.robot.Constants;
 
 public class Claw extends SubsystemBase {
   
-  //CANSparkMax clawMotor = null;
-  //CANSparkMax rotateClawMotor = null;
-
-  DutyCycleEncoder rotationBore;
-
+  CANSparkMax clawMotor = null;
+  CANSparkMax rotateClawMotor = null;
+  DutyCycleEncoder rotationEncoder;
+  DutyCycleEncoder grabEncoder;
+ 
   public Claw() {
  
-    //clawMotor = new CANSparkMax(Constants.clawMotorPort, MotorType.kBrushless);
-    //rotateClawMotor = new CANSparkMax(Constants.rotateClawMotorPort, MotorType.kBrushless);
-
-    //clawMotor.setIdleMode(IdleMode.kBrake);
-    //rotateClawMotor.setIdleMode(IdleMode.kBrake);
+    clawMotor = new CANSparkMax(Constants.clawMotorPort, MotorType.kBrushless);
+    rotateClawMotor = new CANSparkMax(Constants.rotateClawMotorPort, MotorType.kBrushless);
  
-    rotationBore = new DutyCycleEncoder(Constants.rotationEncoderChannel);
+    rotationEncoder = new DutyCycleEncoder(Constants.clawRotationEncoderDIO);
+    grabEncoder = new DutyCycleEncoder(Constants.clawGrabEncoderDIO);
 
+    clawMotor.setIdleMode(IdleMode.kBrake);
+    rotateClawMotor.setIdleMode(IdleMode.kBrake);
+ 
   }
 
   @Override
   public void periodic() {
-    
-    SmartDashboard.putNumber("Rotation Encoder Position", rotationBore.get());
-    SmartDashboard.putNumber("Rotation Encoder Maximum", Constants.maxRotationEncoderValue);
-    SmartDashboard.putNumber("Rotation Encoder Minimum", Constants.minRotationEncoderValue);
+ 
+    SmartDashboard.putNumber("Claw Rotation", rotationEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Claw Grab", grabEncoder.getAbsolutePosition());
 
   }
 
   public void runClaw(double speed) {
 
-    //clawMotor.set(speed);
+    clawMotor.set(speed);
 
   }
 
   public void rotateClaw(double speed) {
 
-    if (rotationBore.get() < Constants.maxRotationEncoderValue && rotationBore.get() > Constants.minRotationEncoderValue) {
-      
-      //rotateClawMotor.set(speed);
-      
-      } else {
-  
-      //rotateClawMotor.set(0);
-       
-      }
+    rotateClawMotor.set(speed);
 
   }
 
