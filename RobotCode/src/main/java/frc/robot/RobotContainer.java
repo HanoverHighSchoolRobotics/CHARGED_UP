@@ -99,7 +99,7 @@ public class RobotContainer {
 
     resetExtensionEncoder = new ResetExtensionEncoder(slide);
  
-    autoBalance = new AutoBalance(drivetrain, xbox1);
+    autoBalance = new AutoBalance(drivetrain, xbox1, .25, .25, 2, 5);
 
     playAudio = new PlayAudio(audio, 0, 0);
 
@@ -239,10 +239,12 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return pathFollower;
+    //return pathFollower;
     //return testPathFollower;
     //return new AngleAndExtendInAuto(slide, feeder, 20, 4);
-    //return new GoToAngleAndExtension(slide, 30, 40, 1);
+    return new SequentialCommandGroup(
+      new GoToAngleAndExtension(slide, 30, 40, 1),
+      new RunFeeder(feeder, -.5).withTimeout(2)
+    );
   }
-  
 }
