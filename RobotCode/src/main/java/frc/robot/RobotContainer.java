@@ -258,7 +258,7 @@ public class RobotContainer {
     driver1RT.whileTrue(new IntakeFeeder(feeder));
     driver1LT.whileTrue(new RunFeeder(feeder, -1));
 
-    driver1Y.whileTrue(autoBalance);
+    driver2Y.whileTrue(autoBalance);
 
   }
 
