@@ -31,11 +31,9 @@ public class AutoBalance extends CommandBase {
   private String movementDirection = "Level";
 
 
-  public AutoBalance(Drivetrain dt, XboxController xboxController, double TurnSpeed, double HorizontalSpeed, double YawTolerance, double PitchTolerance) {
+  public AutoBalance(Drivetrain dt, XboxController xboxController, double YawTolerance, double PitchTolerance) {
     // Use addRequirements() here to declare subsystem dependencies.
     drivetrain = dt;
-    horizontalSpeed = HorizontalSpeed;
-    turnSpeed = TurnSpeed;
     pitchTolerance = PitchTolerance;
     yawTolerance = YawTolerance;
     xbox = xboxController;

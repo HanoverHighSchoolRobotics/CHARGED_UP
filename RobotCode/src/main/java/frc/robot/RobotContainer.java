@@ -108,8 +108,10 @@ public class RobotContainer {
     limelight.EnableLED();
 
     resetExtensionEncoder = new ResetExtensionEncoder(slide);
- 
-    autoBalance = new AutoBalance(drivetrain, xbox1, .25, .25, 2, 5);
+
+                                                 //IMPORTANT: Do not put negative numbers.
+                                                 //Tolerance is for NavX angles
+    autoBalance = new AutoBalance(drivetrain, xbox1, 2, 5);
 
     playAudio = new PlayAudio(audio, 0, 0);
 
