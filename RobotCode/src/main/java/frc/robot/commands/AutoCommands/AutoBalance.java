@@ -45,7 +45,7 @@ public class AutoBalance extends CommandBase {
   @Override
   public void initialize() {
 
-    state = 0;
+    //state = 0;
 
   }
 
@@ -77,7 +77,7 @@ public class AutoBalance extends CommandBase {
 
     //AutoBalance Movement
     //Rotates robot until heading is perpendicular with ramp
-   if (state == 0) {
+   /*if (state == 0) {
        
     //When NavX thinks yaw is less than 2, turns right.
     if (drivetrain.getNavXYawOutput() < -yawTolerance) {
@@ -108,9 +108,9 @@ public class AutoBalance extends CommandBase {
      state = 1;
         
     }
-  }
+  }*/
 
-   if (state == 1) {
+   //if (state == 1) {
      //Sets wheel angle to forward position
      drivetrain.rotateModule(SwerveModule.FRONT_LEFT, 0, 1);
      drivetrain.rotateModule(SwerveModule.FRONT_RIGHT, 0, 1);
@@ -133,11 +133,10 @@ public class AutoBalance extends CommandBase {
 
        drivetrain.driveAllModules(0);
        movementDirection = "Level";    
-       state = 0;
+       //state = 0;
     
       }
     }
-  }
   
   // Called once the command ends or is interrupted.
   @Override
@@ -149,9 +148,17 @@ public class AutoBalance extends CommandBase {
   @Override
   public boolean isFinished() {
     if (xbox.getXButton() == false) {
-        return true;
+     
+      return true;
+
+    } else if (drivetrain.getNavXPitchOutput() < pitchTolerance && drivetrain.getNavXPitchOutput() > -pitchTolerance) {
+
+      return true;
+      
     } else {
+
       return false;
+
     }
   }
 }
