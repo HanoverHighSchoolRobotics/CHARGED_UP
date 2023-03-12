@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.AutoCommands.AngleAndExtendInAuto;
 import frc.robot.commands.AutoCommands.AutoBalance;
+import frc.robot.commands.AutoCommands.CenterToDistance;
+import frc.robot.commands.AutoCommands.DriveBackwardsToDistance;
 import frc.robot.commands.AutoCommands.PathFollower;
 //import frc.robot.commands.ClawCommands.RotateClaw;
 //import frc.robot.commands.ClawCommands.RunClaw;
@@ -65,12 +67,19 @@ public class RobotContainer {
   private final RecalibrateModules recalibrateModules;
 
   private GoToAngleAndExtension TopPosition;
+  private GoToAngleAndExtension TopPositionAuto;
   private GoToAngleAndExtension MiddlePosition;
 
   //private final PathGenerator pathGenerator;
   private final PathFollower pathFollower;
   //private final TestPathFollower testPathFollower;
   private final PathEQ pathEQ; 
+
+  private final DriveBackwardsToDistance GoPastStartingLine;
+
+  private SequentialCommandGroup ScoreOpeningCone;
+
+  private final CenterToDistance CenterToCubeNode;
 
   private final PlayAudio playAudio;
  
@@ -106,12 +115,20 @@ public class RobotContainer {
     //pathEQ = new PathEQ(Constants.autoCoordinates, true);
     pathEQ = new PathEQ(Constants.testCoords, true);
 
+    GoPastStartingLine = new DriveBackwardsToDistance(drivetrain, limelight, 3, .2);
+
+    CenterToCubeNode = new CenterToDistance(drivetrain, limelight, 3, .1, .5);
+
     //Teleop commands
     driveWithXbox = new DriveWithXbox(drivetrain, limelight, xbox1, xbox2, false);
     slideWithXbox = new SlideWithXbox(xbox1, xbox2, slide);
 
-    TopPosition = new GoToAngleAndExtension(slide, Constants.maxAngleEncoderValue, Constants.maxExtensionValue, 1);
+    TopPosition = new GoToAngleAndExtension(slide, 31, Constants.maxExtensionValue, 1);
+    TopPositionAuto = new GoToAngleAndExtension(slide, 31, Constants.maxExtensionValue, 1);
     MiddlePosition = new GoToAngleAndExtension(slide, 20, 20, 1);
+
+    ScoreOpeningCone = new SequentialCommandGroup(TopPositionAuto, new GoToFeederPosition(feeder, -.2), new GoToAngleAndExtension(slide, 0, Constants.minExtensionValue, 1));
+
     driveWithXbox.addRequirements(drivetrain);
     slideWithXbox.addRequirements(slide);
     autoBalance.addRequirements(drivetrain);
@@ -239,6 +256,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    //return GoPastStartingLine;
     //return pathFollower;
     //return testPathFollower;
     //return new AngleAndExtendInAuto(slide, feeder, 20, 4);
