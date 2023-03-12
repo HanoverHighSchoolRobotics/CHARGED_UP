@@ -256,6 +256,8 @@ public class RobotContainer {
     driver1RT.whileTrue(new IntakeFeeder(feeder));
     driver1LT.whileTrue(new RunFeeder(feeder, -1));
 
+    driver1Y.whileTrue(autoBalance);
+
   }
 
   /**
@@ -264,13 +266,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    //return GoPastStartingLine;
-    //return pathFollower;
-    //return testPathFollower;
-    //return new AngleAndExtendInAuto(slide, feeder, 20, 4);
-    return new SequentialCommandGroup(
-      new GoToAngleAndExtension(slide, 30, 40, 1),
-      new RunFeeder(feeder, -.5).withTimeout(2)
-    );
+    return ScoreOpeningCone;
   }
 }
