@@ -17,9 +17,6 @@ import frc.robot.commands.AutoCommands.CenterToDistance;
 import frc.robot.commands.AutoCommands.DriveBackwardsToDistance;
 import frc.robot.commands.AutoCommands.DriveForwardsToDistance;
 import frc.robot.commands.AutoCommands.PathFollower;
-//import frc.robot.commands.ClawCommands.RotateClaw;
-//import frc.robot.commands.ClawCommands.RunClaw;
-//import frc.robot.commands.ClawCommands.RunClawUntilClamp;
 import frc.robot.commands.DriveCommands.DriveWithXbox;
 import frc.robot.commands.FeederCommands.GoToFeederPosition;
 import frc.robot.commands.FeederCommands.IntakeFeeder;
@@ -80,7 +77,7 @@ public class RobotContainer {
 
   private final DriveBackwardsToDistance GoPastStartingLine;
 
-  private SequentialCommandGroup ScoreOpeningCone;
+  private SequentialCommandGroup ScoreOpeningCube;
 
   private final CenterToDistance CenterToCubeNode;
 
@@ -132,12 +129,13 @@ public class RobotContainer {
     TopPositionAuto = new GoToAngleAndExtension(slide, 31, Constants.maxExtensionValue, 1);
     MiddlePosition = new GoToAngleAndExtension(slide, 20, 20, 1);
 
-    ScoreOpeningCone = new SequentialCommandGroup(
+    ScoreOpeningCube = new SequentialCommandGroup(
+    new RunFeeder(feeder, .2).withTimeout(.5),
     TopPositionAuto, 
     new RunFeeder(feeder, -.2).withTimeout(1),
     new GoToAngleAndExtension(slide, 0, Constants.minExtensionValue, 1),
-    new DriveBackwardsToDistance(drivetrain, limelight, 3, .2),
-    new DriveForwardsToDistance(drivetrain, limelight, 5, .2));
+    new DriveBackwardsToDistance(drivetrain, limelight, 2.9, .5),
+    new DriveForwardsToDistance(drivetrain, limelight, 4.45, .2));
 
     driveWithXbox.addRequirements(drivetrain);
     slideWithXbox.addRequirements(slide);
@@ -247,10 +245,10 @@ public class RobotContainer {
 
     //All four face button already used by SlideWithXbox
 
-    driver1Y.onTrue(TopPosition);
-    driver1B.onTrue(MiddlePosition);
-    driver1A.onTrue(new GoToAngleAndExtension(slide, Constants.minAngleEncoderValue, Constants.minExtensionValue + 1, 1));
-    driver1X.whileTrue(new KillArm(slide));
+    driver2Y.onTrue(TopPosition);
+    driver2B.onTrue(MiddlePosition);
+    driver2A.onTrue(new GoToAngleAndExtension(slide, Constants.minAngleEncoderValue, Constants.minExtensionValue + 1, 1));
+    driver2X.whileTrue(new KillArm(slide));
 
     driver2LB.onTrue(new GoToFeederPosition(feeder, -.2));
     driver2RB.onTrue(new GoToFeederPosition(feeder, .2));
@@ -268,6 +266,11 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return ScoreOpeningCone;
+    return ScoreOpeningCube;
+    //return pathFollower;
+    //return testPathFollower;
+    //return new AngleAndExtendInAuto(slide, feeder, 20, 4);
+    //return new GoToAngleAndExtension(slide, 30, 40, 1);
   }
+  
 }
