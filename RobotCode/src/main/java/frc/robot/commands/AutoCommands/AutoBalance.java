@@ -45,7 +45,7 @@ public class AutoBalance extends CommandBase {
   @Override
   public void initialize() {
 
-    //state = 0;
+    state = 0;
 
   }
 
@@ -77,8 +77,7 @@ public class AutoBalance extends CommandBase {
 
     //AutoBalance Movement
     //Rotates robot until heading is perpendicular with ramp
-   /*if (state == 0) {
-       
+   if (state == 0) {
     //When NavX thinks yaw is less than 2, turns right.
     if (drivetrain.getNavXYawOutput() < -yawTolerance) {
      //Sets wheel angle to turn position
@@ -108,7 +107,7 @@ public class AutoBalance extends CommandBase {
      state = 1;
         
     }
-  }*/
+  }
 
    //if (state == 1) {
      //Sets wheel angle to forward position
