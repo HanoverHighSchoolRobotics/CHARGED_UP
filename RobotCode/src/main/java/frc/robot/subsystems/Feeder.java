@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -19,6 +20,7 @@ public class Feeder extends SubsystemBase {
   CANSparkMax rightFeederMotor;
   CANSparkMax rotationFeederMotor;
   DutyCycleEncoder feederEncoder;
+  Timer timer;
 
   /** Creates a new Feeder. */
   public Feeder() {
@@ -30,6 +32,8 @@ public class Feeder extends SubsystemBase {
     rotationFeederMotor.setIdleMode(IdleMode.kBrake);
 
     feederEncoder = new DutyCycleEncoder(Constants.feederRotationEncoderDIO);
+
+    timer = new Timer();
 
   }
 
@@ -48,6 +52,25 @@ public class Feeder extends SubsystemBase {
   public void runFeeder(double speed) {
     leftFeederMotor.set(-speed);
     rightFeederMotor.set(speed);
+  }
+
+  public void runFeederTimed(double speed, double seconds) {
+    
+      SmartDashboard.putNumber("Feeder Time", timer.get());
+      timer.reset();
+      timer.start();
+
+    if (timer.get() < seconds) {
+      leftFeederMotor.set(-speed);
+      rightFeederMotor.set(speed);
+
+    } else {
+     
+      leftFeederMotor.set(0);
+      rightFeederMotor.set(0);
+      timer.stop();
+
+    }
   }
 
   public void rotateFeeder(double speed) {
